@@ -1,18 +1,14 @@
-# משתמשים בתמונה רשמית של Node
 FROM node:18
 
-# יצירת תיקיית עבודה
+# התקנת תעודות אבטחה של לינוקס כדי לפתור את שגיאת ה-SSL
+RUN apt-get update && apt-get install -y ca-certificates && update-ca-certificates
+
 WORKDIR /app
 
-# העתקת קבצי הגדרות והתקנת תלויות
 COPY package*.json ./
 RUN npm install
 
-# העתקת כל שאר הקבצים (כולל תיקיית prisma)
 COPY . .
 
-# יצירת ה-Client של Prisma (חשוב לריצה)
-RUN npx prisma generate
-
-# הפקודה שתרוץ כשהקונטיינר עולה (נשנה אותה דרך ה-compose כדי להריץ מיגרציות)
+# הפעם אנחנו לא מריצים פריזמה בתוך ה-Build
 CMD ["node", "main.js"]
